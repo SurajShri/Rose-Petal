@@ -1,226 +1,239 @@
+```html
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rose Camera</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
 <style>
+
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+margin:0;
+padding:0;
+box-sizing:border-box;
 }
 
 html,body{
-    width:100%;
-    height:100%;
-    overflow:hidden;
-    background:#000;
+width:100%;
+height:100%;
+overflow:hidden;
+background:#000;
 }
 
-#video{
-    position:fixed;
-    inset:0;
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    transform:scaleX(-1);
-    z-index:1;
+/* Camera */
+
+video{
+position:fixed;
+inset:0;
+width:100%;
+height:100%;
+object-fit:cover;
+transform:scaleX(-1);
+z-index:1;
 }
+
+/* Petals */
 
 #petal-container{
-    position:fixed;
-    inset:0;
-    overflow:hidden;
-    pointer-events:none;
-    z-index:8;
+position:fixed;
+inset:0;
+pointer-events:none;
+overflow:hidden;
+z-index:8;
 }
 
 .petal{
-    position:absolute;
-    top:-120px;
-    pointer-events:none;
-    animation:fall linear forwards;
+position:absolute;
+top:-120px;
+pointer-events:none;
+animation:fall linear forwards;
 }
 
 @keyframes fall{
 
-    0%{
-        transform:
-        translateX(0)
-        translateY(-100px)
-        rotate(0deg);
-    }
-
-    25%{
-        transform:
-        translateX(40px)
-        translateY(25vh)
-        rotate(90deg);
-    }
-
-    50%{
-        transform:
-        translateX(-30px)
-        translateY(50vh)
-        rotate(180deg);
-    }
-
-    75%{
-        transform:
-        translateX(50px)
-        translateY(75vh)
-        rotate(270deg);
-    }
-
-    100%{
-        transform:
-        translateX(-20px)
-        translateY(120vh)
-        rotate(360deg);
-    }
+0%{
+transform:
+translateX(0)
+translateY(-100px)
+rotate(0deg);
 }
+
+25%{
+transform:
+translateX(40px)
+translateY(25vh)
+rotate(90deg);
+}
+
+50%{
+transform:
+translateX(-30px)
+translateY(50vh)
+rotate(180deg);
+}
+
+75%{
+transform:
+translateX(50px)
+translateY(75vh)
+rotate(270deg);
+}
+
+100%{
+transform:
+translateX(-20px)
+translateY(120vh)
+rotate(360deg);
+}
+
+}
+
+/* Frame */
 
 #frame{
-    position:fixed;
-    inset:0;
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    pointer-events:none;
-    z-index:10;
+position:fixed;
+inset:0;
+width:100%;
+height:100%;
+object-fit:cover;
+pointer-events:none;
+z-index:10;
 }
 
+/* Start Screen */
+
 #start{
-    position:fixed;
-    inset:0;
-    background:#000;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    z-index:9999;
+position:fixed;
+inset:0;
+background:#000;
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:9999;
 }
 
 #start button{
-    padding:18px 35px;
-    font-size:22px;
-    border:none;
-    border-radius:40px;
-    background:#ff4f81;
-    color:white;
-    cursor:pointer;
-    box-shadow:0 0 25px rgba(255,79,129,.5);
+padding:18px 35px;
+font-size:22px;
+border:none;
+border-radius:40px;
+background:#ff4f81;
+color:white;
+cursor:pointer;
+box-shadow:0 0 30px rgba(255,79,129,.5);
 }
+
 </style>
 </head>
-
 <body>
 
 <div id="start">
-    <button>🌹 Open Your Surprise 🌹</button>
+<button>🌹 Open Your Surprise 🌹</button>
 </div>
 
 <video id="video" autoplay playsinline muted></video>
 
 <div id="petal-container"></div>
 
-<img src="frame.png" id="frame" alt="frame">
+<img src="frame.png" id="frame">
 
 <audio id="music" loop>
-    <source src="song.mp3" type="audio/mpeg">
+<source src="song.mp3" type="audio/mpeg">
 </audio>
 
 <script>
 
-const video = document.getElementById("video");
-const music = document.getElementById("music");
-const start = document.getElementById("start");
+const video=document.getElementById("video");
+const music=document.getElementById("music");
+const start=document.getElementById("start");
 
-// Start Experience
-start.onclick = async () => {
+/* Start Experience */
 
-    try{
+start.onclick=async()=>{
 
-        await music.play();
+try{
 
-        const stream =
-        await navigator.mediaDevices.getUserMedia({
-            video:{
-                facingMode:"user"
-            }
-        });
+await music.play();
 
-        video.srcObject = stream;
+const stream=
+await navigator.mediaDevices.getUserMedia({
+video:{
+facingMode:"user"
+}
+});
 
-        start.remove();
+video.srcObject=stream;
 
-    }catch(err){
+start.remove();
 
-        alert("Please allow camera access.");
+}catch(err){
 
-        console.log(err);
+alert("Please allow camera and audio.");
 
-    }
+console.log(err);
+
+}
 
 };
 
-// Infinite Petals
-const container =
+/* Infinite Rose Petals */
+
+const petalContainer=
 document.getElementById("petal-container");
 
 function createPetal(){
 
-    const petal =
-    document.createElement("img");
+const petal=
+document.createElement("img");
 
-    petal.src = "rose-petal.png";
+petal.src="rose-petal.png";
 
-    petal.className = "petal";
+petal.className="petal";
 
-    const size =
-    15 + Math.random() * 40;
+const size=
+15+Math.random()*35;
 
-    const duration =
-    6 + Math.random() * 8;
+const duration=
+10+Math.random()*10;
 
-    petal.style.left =
-    Math.random() *
-    window.innerWidth + "px";
+petal.style.left=
+Math.random()*window.innerWidth+"px";
 
-    petal.style.width =
-    size + "px";
+petal.style.width=
+size+"px";
 
-    petal.style.opacity =
-    0.5 + Math.random() * 0.5;
+petal.style.opacity=
+0.6+Math.random()*0.4;
 
-    petal.style.animationDuration =
-    duration + "s";
+petal.style.animationDuration=
+duration+"s";
 
-    container.appendChild(petal);
+petalContainer.appendChild(petal);
 
-    petal.addEventListener(
-        "animationend",
-        () => petal.remove()
-    );
+petal.addEventListener(
+"animationend",
+()=>petal.remove()
+);
 
 }
 
-// Initial petals
-for(let i=0;i<40;i++){
-    setTimeout(createPetal,i*100);
+/* Initial Burst */
+
+for(let i=0;i<30;i++){
+setTimeout(createPetal,i*150);
 }
 
-// Endless rain
+/* Endless Rain */
+
 setInterval(()=>{
 
-    createPetal();
-    createPetal();
-    createPetal();
+createPetal();
+createPetal();
 
-},250);
+},300);
 
 </script>
 
 </body>
 </html>
+```
