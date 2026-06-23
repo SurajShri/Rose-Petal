@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#000;
+}
+
+/* Camera */
+
+video{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transform:scaleX(-1);
+  z-index:1;
+}
+
+/* Frame */
+
+#frame{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  pointer-events:none;
+  z-index:10;
+}
+
+/* Start Screen */
+
+#start{
+  position:fixed;
+  inset:0;
+  background:#000;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+#start button{
+  padding:18px 35px;
+  font-size:22px;
+  border:none;
+  border-radius:40px;
+  background:#ff4f81;
+  color:white;
+  cursor:pointer;
+  box-shadow:0 0 30px rgba(255,79,129,.5);
+  transition:.3s;
+}
+
+#start button:hover{
+  transform:scale(1.05);
+}
+</style>
+</head>
+
+<body>
+
+<div id="start">
+  <button>Alexa, play "ek din aap" ❤️</button>
+</div>
+
+<video id="video" autoplay playsinline muted></video>
+
+<img src="frame.png" id="frame">
+
+<audio id="music" loop>
+  <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const video = document.getElementById("video");
+const music = document.getElementById("music");
+const start = document.getElementById("start");
+
+/* Start Experience */
+
+start.onclick = async () => {
+  try {
+
+    await music.play();
+
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: "user"
+      }
+    });
+
+    video.srcObject = stream;
+
+    start.remove();
+
+  } catch (err) {
+
+    alert("Please allow camera and audio.");
+    console.log(err);
+
+  }
+};
+</script>
+
+</body>
+</html>
